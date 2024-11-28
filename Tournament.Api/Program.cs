@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Tournament.Api.Extensions;
 using Tournament.Data.Data;
 
 namespace Tournament.Api
@@ -23,6 +24,7 @@ namespace Tournament.Api
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+            await app.SeedDataAsync();
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
