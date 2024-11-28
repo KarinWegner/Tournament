@@ -28,6 +28,6 @@ namespace Tournament.Api.Extensions
 
         }
 
-
+        
     }
 }
