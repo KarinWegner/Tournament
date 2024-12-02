@@ -21,15 +21,21 @@ namespace Tournament.Data.Data.Repositories
         {
             _context.Game.Add(game);
         }
-
         public Task<bool> AnyAsync(int id)
         {
             return _context.Game.AnyAsync(g => g.Id == id);
         }
-
-        public async Task<IEnumerable<Game>> GetAllAsync()
+        public Task<bool> AnyAsync(int id, int tournamentdetailsId)
         {
-            return await _context.Game.ToListAsync();
+
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Game>> GetAllAsync(int tournamentdetailsId)
+        {
+            var tournament = _context.TournamentDetails.FirstOrDefault(t => t.Id == tournamentdetailsId);
+
+            return  tournament.Games;
         }
 
         public async Task<Game> GetAsync(int id)

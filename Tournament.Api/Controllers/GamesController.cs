@@ -7,32 +7,50 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tournament.Data.Data;
 using Tournament.Core.Entities;
+using Tournament.Core.Repositories;
+using Tournament.Data.Data.Repositories;
 
 namespace Tournament.Api.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/Tournaments/{tournamentdetailsId}/Games")]
     [ApiController]
     public class GamesController : ControllerBase
     {
         private readonly TournamentApiContext _context;
+        private readonly IUoW _uow;
 
-        public GamesController(TournamentApiContext context)
+        public GamesController(TournamentApiContext context, IUoW uow)
         {
             _context = context;
+            _uow = uow;
         }
 
         // GET: api/Games
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Game>>> GetGame()
+        public async Task<ActionResult<IEnumerable<Game>>> GetGames(int tournamentdetailsId)
         {
-            return await _context.Game.ToListAsync();
+            var tournament = await _uow.tournamentRepository.GetAsync(tournamentdetailsId);
+            if (tournament == null)
+            {
+                return NotFound(tournament);
+            }
+
+            var games = await _uow.gameRepository.GetAllAsync(tournamentdetailsId);
+            return Ok(games);
         }
 
         // GET: api/Games/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Game>> GetGame(int id)
+        [HttpGet("{gameId}")]
+        public async Task<ActionResult<Game>> GetGame(int tournamentdetailsId, int gameId)
         {
-            var game = await _context.Game.FindAsync(id);
+            var tournament = _uow.tournamentRepository.GetAsync(tournamentdetailsId);
+            if (tournament ==null)
+            {
+                return NotFound(tournament);
+            }
+
+
+            var game = await _uow.gameRepository.GetAsync(gameId);
 
             if (game == null)
             {
@@ -44,7 +62,7 @@ namespace Tournament.Api.Controllers
 
         // PUT: api/Games/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("{tournamentId}")]
         public async Task<IActionResult> PutGame(int id, Game game)
         {
             if (id != game.Id)

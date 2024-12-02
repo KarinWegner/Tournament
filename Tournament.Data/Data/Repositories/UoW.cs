@@ -7,7 +7,7 @@ using Tournament.Core.Repositories;
 
 namespace Tournament.Data.Data.Repositories
 {
-    internal class UoW : IUoW
+    public class UoW : IUoW
     {
         public ITournamentRepository tournamentRepository { get;  }
 
