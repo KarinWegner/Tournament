@@ -33,9 +33,10 @@ namespace Tournament.Data.Data.Repositories
 
         public async Task<IEnumerable<Game>> GetAllAsync(int tournamentdetailsId)
         {
-            var tournament = _context.TournamentDetails.FirstOrDefault(t => t.Id == tournamentdetailsId);
+           
+            var games = _context.Game.Where(g=>g.TournamentDetailsId ==tournamentdetailsId);
 
-            return  tournament.Games;
+            return await games.ToListAsync();
         }
 
         public async Task<Game> GetAsync(int id)
