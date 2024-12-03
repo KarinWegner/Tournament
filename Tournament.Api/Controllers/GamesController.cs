@@ -43,12 +43,12 @@ namespace Tournament.Api.Controllers
         [HttpGet("{gameId}")]
         public async Task<ActionResult<Game>> GetGame(int tournamentdetailsId, int gameId)
         {
-            var tournament = _uow.tournamentRepository.GetAsync(tournamentdetailsId);
-            if (tournament ==null)
-            {
-                return NotFound(tournament);
-            }
-
+            //var tournament = _uow.tournamentRepository.GetAsync(tournamentdetailsId);
+            //if (tournament ==null)
+            //{
+            //    return NotFound(tournament);
+            //}
+            //var tournamentDto = _mapper.Map<TournamentDetails>(tournament);
 
             var game = await _uow.gameRepository.GetAsync(gameId);
 
