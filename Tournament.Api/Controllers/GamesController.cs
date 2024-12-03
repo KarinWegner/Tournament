@@ -10,6 +10,7 @@ using Tournament.Core.Entities;
 using Tournament.Core.Repositories;
 using Tournament.Data.Data.Repositories;
 using AutoMapper;
+using Tournament.Core.Dto;
 
 namespace Tournament.Api.Controllers
 {
@@ -32,14 +33,17 @@ namespace Tournament.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Game>>> GetGames(int tournamentdetailsId)
         {
+
             var tournament = await _uow.tournamentRepository.GetAsync(tournamentdetailsId);
             if (tournament == null)
             {
                 return NotFound(tournament);
             }
+            var tournamentDto = _mapper.Map<TournamentDetails>(tournament);
 
             var games = await _uow.gameRepository.GetAllAsync(tournamentdetailsId);
-            return Ok(games);
+            var gamesDto = _mapper.Map<IEnumerable<Game>>(games);
+            return Ok(gamesDto);
         }
 
         // GET: api/Games/5
@@ -54,13 +58,14 @@ namespace Tournament.Api.Controllers
             //var tournamentDto = _mapper.Map<TournamentDetails>(tournament);
 
             var game = await _uow.gameRepository.GetAsync(gameId);
+            var gameDto = _mapper.Map<Game>(game);
 
             if (game == null)
             {
                 return NotFound();
             }
 
-            return game;
+            return gameDto;
         }
 
         // PUT: api/Games/5
