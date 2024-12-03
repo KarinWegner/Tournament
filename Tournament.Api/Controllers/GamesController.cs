@@ -56,14 +56,19 @@ namespace Tournament.Api.Controllers
             //    return NotFound(tournament);
             //}
             //var tournamentDto = _mapper.Map<TournamentDetails>(tournament);
-
-            var game = await _uow.gameRepository.GetAsync(gameId);
-            var gameDto = _mapper.Map<Game>(game);
-
+              var game = await _uow.gameRepository.GetAsync(gameId);
+            
             if (game == null)
             {
                 return NotFound();
             }
+
+            if (!await _uow.gameRepository.AnyAsync(gameId, tournamentdetailsId))
+            {
+                return NotFound();
+            }
+          
+            var gameDto = _mapper.Map<Game>(game);
 
             return gameDto;
         }

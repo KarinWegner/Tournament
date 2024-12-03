@@ -27,8 +27,9 @@ namespace Tournament.Data.Data.Repositories
         }
         public Task<bool> AnyAsync(int id, int tournamentdetailsId)
         {
+            var result=  _context.Game.AnyAsync(g => g.Id == id && g.TournamentDetailsId == tournamentdetailsId);
+            return result;
 
-            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Game>> GetAllAsync(int tournamentdetailsId)
