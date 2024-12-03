@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using Tournament.Data.Data;
 using Tournament.Core.Entities;
 using Tournament.Core.Repositories;
+using AutoMapper;
 
 namespace Tournament.Api.Controllers
 {
@@ -17,11 +18,13 @@ namespace Tournament.Api.Controllers
     {
         private readonly TournamentApiContext _context;
         private readonly IUoW _uow;
+        private readonly IMapper _mapper;
 
-        public TournamentDetailsController(TournamentApiContext context, IUoW uow)
+        public TournamentDetailsController(TournamentApiContext context, IUoW uow, IMapper mapper)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
+            _mapper = mapper;
         }
 
         // GET: api/TournamentDetails

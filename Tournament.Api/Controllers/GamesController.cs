@@ -9,6 +9,7 @@ using Tournament.Data.Data;
 using Tournament.Core.Entities;
 using Tournament.Core.Repositories;
 using Tournament.Data.Data.Repositories;
+using AutoMapper;
 
 namespace Tournament.Api.Controllers
 {
@@ -18,11 +19,13 @@ namespace Tournament.Api.Controllers
     {
         private readonly TournamentApiContext _context;
         private readonly IUoW _uow;
+        private readonly IMapper _mapper;
 
-        public GamesController(TournamentApiContext context, IUoW uow)
+        public GamesController(TournamentApiContext context, IUoW uow, IMapper mapper)
         {
             _context = context;
             _uow = uow;
+            _mapper = mapper;
         }
 
         // GET: api/Games
