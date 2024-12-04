@@ -11,6 +11,7 @@ using Tournament.Core.Repositories;
 using AutoMapper;
 using Tournament.Core.Dto;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Tournament.Api.Controllers
 {
@@ -76,7 +77,15 @@ namespace Tournament.Api.Controllers
 
         }
 
- 
+        //[HttpPatch("{id}")]
+        //public async Task<IActionResult> PatchTournamentDetails(int id, JsonPatchDocument<TournamentUpdateDto> patchDocument)
+        //{
+
+        //}
+        //if (tournamentDetails.Title != null)
+        //            tournament.Title = tournamentDetails.Title;
+        //if (tournamentDetails.StartDate != null)
+        //            tournament.StartDate = (DateTime)tournamentDetails.StartDate;
 
 
         // POST: api/TournamentDetails
@@ -103,8 +112,15 @@ namespace Tournament.Api.Controllers
                 return NotFound();
             }
 
-            _context.TournamentDetails.Remove(tournamentDetails);
-            await _context.SaveChangesAsync();
+            var games = await _uow.gameRepository.GetAllAsync(id);
+
+            if (games.Count() != 0)
+            {
+                return BadRequest();
+            }
+            _uow.tournamentRepository.Remove(tournamentDetails);
+
+            await _uow.CompleteAsync();
 
             return NoContent();
         }
