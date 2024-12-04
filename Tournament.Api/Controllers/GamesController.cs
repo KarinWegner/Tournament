@@ -107,10 +107,11 @@ namespace Tournament.Api.Controllers
         // POST: api/Games
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Game>> PostGame(Game game)
+        public async Task<ActionResult<Game>> PostGame(GameCreateDto gameDto)
         {
-            _context.Game.Add(game);
-            await _context.SaveChangesAsync();
+            var game = _mapper.Map<Game>(gameDto);
+            _uow.gameRepository.Add(game);
+            await _uow.CompleteAsync();
 
             return CreatedAtAction("GetGame", new { id = game.Id }, game);
         }
