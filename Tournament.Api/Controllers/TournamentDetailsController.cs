@@ -13,7 +13,7 @@ using Tournament.Core.Dto;
 
 namespace Tournament.Api.Controllers
 {
-    [Route("api/Tournaments")]
+    [Route("api/tournaments")]
     [ApiController]
     public class TournamentDetailsController : ControllerBase
     {
