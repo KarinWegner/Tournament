@@ -75,33 +75,30 @@ namespace Tournament.Api.Controllers
 
         // PUT: api/Games/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{tournamentId}")]
-        public async Task<IActionResult> PutGame(int id, Game game)
+        [HttpPut("{gameId}")]
+        public async Task<IActionResult> PutGame(int tournamentdetailsId, int gameId, GameUpdateDto gameDto)
         {
-            if (id != game.Id)
+
+
+            var game = await _uow.gameRepository.GetAsync(gameId);
+            if (game==null)
+            {
+                return NotFound();
+            }
+            if (game.TournamentDetailsId != tournamentdetailsId)
             {
                 return BadRequest();
             }
 
-            _context.Entry(game).State = EntityState.Modified;
+             _mapper.Map(game, gameDto);
 
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!GameExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            var updatedGame = _mapper.Map<GameDto>(game);
 
-            return NoContent();
+            await _uow.CompleteAsync();
+
+            return Ok(updatedGame);
+
+           
         }
 
         // POST: api/Games
@@ -110,11 +107,11 @@ namespace Tournament.Api.Controllers
         public async Task<ActionResult<Game>> PostGame(GameCreateDto gameDto, int tournamentdetailsId)
         {
             if (gameDto.TournamentDetailsId != tournamentdetailsId)
-        {
+            {
                 return BadRequest();
             }
 
-            var game = _mapper.Map<Game>(gameDto);
+            var game = _mapper.Map<Game>(gameDto);          
             _uow.gameRepository.Add(game);
 
             await _uow.CompleteAsync();

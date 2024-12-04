@@ -19,6 +19,7 @@ namespace Tournament.Data.Data
             CreateMap<TournamentCreateDto, TournamentDetails>();
             CreateMap<GameCreateDto, Game>();
             CreateMap<TournamentUpdateDto, TournamentDetails>();
+            CreateMap<GameUpdateDto, Game>();
             
         }
     }
