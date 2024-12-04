@@ -8,5 +8,8 @@ namespace Tournament.Core.Dto
 {
     public class GameCreateDto
     {
+        public string Title { get; set; }
+        public DateTime Time { get; set; }
+        public int TournamentDetailsId { get; set; }
     }
 }
