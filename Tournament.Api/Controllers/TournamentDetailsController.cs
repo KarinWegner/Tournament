@@ -56,27 +56,23 @@ namespace Tournament.Api.Controllers
         // PUT: api/TournamentDetails/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateTournamentDetails(int id, TournamentDetails tournamentDetails)
+        public async Task<IActionResult> PutTournamentDetails(int id, TournamentUpdateDto tournamentDetails)
         {
-            if (id != tournamentDetails.Id)
-            {
-                return BadRequest();
-            }
             var tournament = await _uow.tournamentRepository.GetAsync(id);
-            if (tournament == null)
-            {
-                return NotFound();
-            }
 
-            tournament.Title = tournamentDetails.Title;
-            tournament.StartDate = tournamentDetails.StartDate;
+            if (id != tournament.Id) return BadRequest();
             
+            if (tournament == null) return NotFound();
 
-           // _context.Entry(tournamentDetails).State = EntityState.Modified;
+            _mapper.Map(tournamentDetails, tournament);
 
-            try
-            {
+           
+
                 await _uow.CompleteAsync();
+          return Ok(_mapper.Map<TournamentDto>(tournament));
+
+           // return NoContent();
+
             }
             catch (DbUpdateConcurrencyException)
             {
