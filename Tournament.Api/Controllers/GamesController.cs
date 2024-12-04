@@ -79,12 +79,12 @@ namespace Tournament.Api.Controllers
         public async Task<IActionResult> PutGame(int tournamentdetailsId, int gameId, GameUpdateDto gameDto)
         {
 
-
+            var tournament = await _uow.tournamentRepository.GetAsync(tournamentdetailsId);
+            if (tournament == null) return NotFound();
+            
             var game = await _uow.gameRepository.GetAsync(gameId);
-            if (game==null)
-            {
-                return NotFound();
-            }
+            if (game==null) return NotFound();
+            
             if (game.TournamentDetailsId != tournamentdetailsId)
             {
                 return BadRequest();
@@ -120,17 +120,22 @@ namespace Tournament.Api.Controllers
         }
 
         // DELETE: api/Games/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteGame(int id)
+        [HttpDelete("{gameId}")]
+        public async Task<IActionResult> DeleteGame(int gameId, int tournamentdetailsId)
         {
-            var game = await _context.Game.FindAsync(id);
-            if (game == null)
-            {
-                return NotFound();
-            }
+            var tournament = await _uow.tournamentRepository.GetAsync(tournamentdetailsId);
+            if (tournament == null) return NotFound();
 
-            _context.Game.Remove(game);
-            await _context.SaveChangesAsync();
+            var game = await _uow.gameRepository.GetAsync(gameId);
+            if (game == null) return NotFound();
+
+            if (game.TournamentDetailsId != tournamentdetailsId)
+            {
+                return BadRequest();
+            }
+            
+            _uow.gameRepository.Remove(game);
+            await _uow.CompleteAsync();
 
             return NoContent();
         }
