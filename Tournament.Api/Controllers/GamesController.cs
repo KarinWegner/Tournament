@@ -112,8 +112,8 @@ namespace Tournament.Api.Controllers
             var game = _mapper.Map<Game>(gameDto);
             _uow.gameRepository.Add(game);
             await _uow.CompleteAsync();
-
-            return CreatedAtAction("GetGame", new { id = game.Id }, game);
+            var createdGame = _mapper.Map<GameDto>(game);
+            return CreatedAtAction("GetGame", new { id = createdGame.Id }, createdGame);
         }
 
         // DELETE: api/Games/5

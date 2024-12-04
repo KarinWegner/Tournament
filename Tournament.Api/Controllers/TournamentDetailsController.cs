@@ -102,8 +102,9 @@ namespace Tournament.Api.Controllers
 
             _uow.tournamentRepository.Add(tournamentDetails);
             await _uow.CompleteAsync();
+            var createdTournament = _mapper.Map<TournamentDto>(tournamentDetails);
 
-            return CreatedAtAction("GetTournamentDetails", new { id = tournamentDetails.Id }, tournamentDetails);
+            return CreatedAtAction("GetTournamentDetails", new { id = createdTournament.Id }, createdTournament);
         }
 
         // DELETE: api/TournamentDetails/5
