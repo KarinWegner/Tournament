@@ -10,6 +10,7 @@ using Tournament.Core.Entities;
 using Tournament.Core.Repositories;
 using AutoMapper;
 using Tournament.Core.Dto;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Tournament.Api.Controllers
 {
@@ -68,26 +69,15 @@ namespace Tournament.Api.Controllers
 
            
 
-                await _uow.CompleteAsync();
+            await _uow.CompleteAsync();
           return Ok(_mapper.Map<TournamentDto>(tournament));
 
            // return NoContent();
 
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!TournamentDetailsExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
         }
+
+ 
+
 
         // POST: api/TournamentDetails
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
