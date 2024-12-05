@@ -51,24 +51,19 @@ namespace Tournament.Api.Controllers
         [HttpGet("{gameId}")]
         public async Task<ActionResult<Game>> GetGame(int tournamentdetailsId, int gameId)
         {
-            //var tournament = _uow.tournamentRepository.GetAsync(tournamentdetailsId);
-            //if (tournament ==null)
-            //{
-            //    return NotFound(tournament);
-            //}
-            //var tournamentDto = _mapper.Map<TournamentDetails>(tournament);
-              var game = await _uow.gameRepository.GetAsync(gameId);
-            
-            if (game == null)
-            {
-                return NotFound();
-            }
+            var tournament = await _uow.tournamentRepository.AnyAsync(tournamentdetailsId);
+            if (!tournament) return NotFound("Tournament was not found");
 
-            if (!await _uow.gameRepository.AnyAsync(gameId, tournamentdetailsId))
-            {
-                return NotFound();
-            }
-          
+            var game = await _uow.gameRepository.GetAsync(gameId);
+            if (game == null) return NotFound("Game was not found");
+
+            if (game.TournamentDetailsId != tournamentdetailsId)
+                return BadRequest("Game is not part of selected Tournament");
+
+
+            //if (!await _uow.gameRepository.AnyAsync(gameId, tournamentdetailsId))
+            //    return NotFound("Game was not found in tournament database");
+            
             var gameDto = _mapper.Map<Game>(game);
 
             return gameDto;
@@ -80,18 +75,16 @@ namespace Tournament.Api.Controllers
         public async Task<IActionResult> PutGame(int tournamentdetailsId, int gameId, GameUpdateDto gameDto)
         {
 
-            var tournament = await _uow.tournamentRepository.GetAsync(tournamentdetailsId);
-            if (tournament == null) return NotFound();
-            
-            var game = await _uow.gameRepository.GetAsync(gameId);
-            if (game==null) return NotFound();
-            
-            if (game.TournamentDetailsId != tournamentdetailsId)
-            {
-                return BadRequest();
-            }
+            var tournament = await _uow.tournamentRepository.AnyAsync(tournamentdetailsId);
+            if (!tournament) return NotFound("Tournament was not found");
 
-             _mapper.Map(game, gameDto);
+            var game = await _uow.gameRepository.GetAsync(gameId);
+            if (game == null) return NotFound("Game was not found");
+
+            if (game.TournamentDetailsId != tournamentdetailsId)
+                return BadRequest("Game is not part of selected Tournament");
+
+            _mapper.Map(game, gameDto);
 
             var updatedGame = _mapper.Map<GameDto>(game);
 
@@ -109,7 +102,7 @@ namespace Tournament.Api.Controllers
         {
             if (gameDto.TournamentDetailsId != tournamentdetailsId)
             {
-                return BadRequest();
+                return BadRequest("Game is not part of selected Tournament");
             }
 
             var game = _mapper.Map<Game>(gameDto);          
@@ -120,6 +113,7 @@ namespace Tournament.Api.Controllers
             return CreatedAtAction("GetGame", new { tournamentdetailsId =createdGame.TournamentDetailsId , gameId = createdGame.Id }, createdGame);
         }
 
+        // PATCH: api/tournaments/1/games/5
         [HttpPatch("{gameId}")]
         public async Task<IActionResult> PatchGame(int gameId, int tournamentdetailsId, JsonPatchDocument<GameUpdateDto> patchDocument)
         {
@@ -147,26 +141,42 @@ namespace Tournament.Api.Controllers
             [HttpDelete("{gameId}")]
         public async Task<IActionResult> DeleteGame(int gameId, int tournamentdetailsId)
         {
-            var tournament = await _uow.tournamentRepository.GetAsync(tournamentdetailsId);
-            if (tournament == null) return NotFound();
+            var tournament = await _uow.tournamentRepository.AnyAsync(tournamentdetailsId);
+            if (!tournament) return NotFound("Tournament was not found");
 
             var game = await _uow.gameRepository.GetAsync(gameId);
-            if (game == null) return NotFound();
+            if (game == null) return NotFound("Game was not found");
 
             if (game.TournamentDetailsId != tournamentdetailsId)
-            {
-                return BadRequest();
-            }
-            
+                return BadRequest("Game is not part of selected Tournament");
+
             _uow.gameRepository.Remove(game);
             await _uow.CompleteAsync();
 
             return NoContent();
         }
 
-        private bool GameExists(int id)
-        {
-            return _context.Game.Any(e => e.Id == id);
-        }
+        //private bool GameExists(int id)
+        //{
+        //    return _context.Game.Any(e => e.Id == id);
+        //}
+
+        //private async Task<IActionResult> CorrectInput(int gameId, int tournamentdetailsId)
+        //{
+        //    var tournament = await _uow.tournamentRepository.AnyAsync(tournamentdetailsId);
+        //    if (!tournament) return NotFound();
+
+        //    var game = await _uow.gameRepository.GetAsync(gameId);
+        //    if (game == null) return NotFound();
+
+        //    if (game.TournamentDetailsId != tournamentdetailsId)
+        //        return BadRequest("Game is not part of selected Tournament");
+
+
+        //    if (!await _uow.gameRepository.AnyAsync(gameId, tournamentdetailsId))
+        //        return NotFound("Game was not found in tournament database");
+
+        //    return Ok();
+        //}
     }
 }
