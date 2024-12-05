@@ -34,8 +34,6 @@ namespace Tournament.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TournamentDetails>>> GetTournamentDetails()
         {
-
-
             var tournaments = await _uow.tournamentRepository.GetAllAsync();
             var dto = _mapper.Map<IEnumerable<TournamentDto>>(tournaments);
             return Ok(dto);
@@ -47,11 +45,8 @@ namespace Tournament.Api.Controllers
         {
             var tournament = await _uow.tournamentRepository.GetAsync(id);
 
-            if (tournament == null)
-            {
-                return NotFound();
-            }
-
+            if (tournament == null) return NotFound();
+            
             return tournament;
         }
 
@@ -62,10 +57,10 @@ namespace Tournament.Api.Controllers
         {
             var tournament = await _uow.tournamentRepository.GetAsync(id);
 
-            if (id != tournament.Id) return BadRequest();
             
-            if (tournament == null) return NotFound();
-
+            
+            if (tournament == null) return NotFound("Tournament was not found");
+            if (id != tournament.Id) return BadRequest("Tournament Id does not match input tournamnet");
             _mapper.Map(tournamentDetails, tournament);
 
            
@@ -83,7 +78,7 @@ namespace Tournament.Api.Controllers
             if (patchDocument is null) return BadRequest("No patch document found");
 
             var tournamentToPatch = await _uow.tournamentRepository.GetAsync(id);
-            if (tournamentToPatch == null) return NotFound();
+            if (tournamentToPatch == null) return NotFound("Tournament was not found");
 
             var tournamentDto = _mapper.Map<TournamentUpdateDto>(tournamentToPatch);
 
@@ -99,10 +94,7 @@ namespace Tournament.Api.Controllers
             
 
         }
-        //if (tournamentDetails.Title != null)
-        //            tournament.Title = tournamentDetails.Title;
-        //if (tournamentDetails.StartDate != null)
-        //            tournament.StartDate = (DateTime)tournamentDetails.StartDate;
+        
 
 
         // POST: api/TournamentDetails
@@ -124,17 +116,13 @@ namespace Tournament.Api.Controllers
         public async Task<IActionResult> DeleteTournamentDetails(int id)
         {
             var tournamentDetails = await _context.TournamentDetails.FindAsync(id);
-            if (tournamentDetails == null)
-            {
-                return NotFound();
-            }
 
+            if (tournamentDetails == null)  return NotFound("Tournament was not found");
+            
             var games = await _uow.gameRepository.GetAllAsync(id);
 
-            if (games.Count() != 0)
-            {
-                return BadRequest();
-            }
+            if (games.Count() != 0) return BadRequest("Can not delete tournament with existing games");
+           
             _uow.tournamentRepository.Remove(tournamentDetails);
 
             await _uow.CompleteAsync();
@@ -142,9 +130,9 @@ namespace Tournament.Api.Controllers
             return NoContent();
         }
 
-        private bool TournamentDetailsExists(int id)
-        {
-            return _context.TournamentDetails.Any(e => e.Id == id);
-        }
+        //private bool TournamentDetailsExists(int id)
+        //{
+        //    return _context.TournamentDetails.Any(e => e.Id == id);
+        //}
     }
 }
