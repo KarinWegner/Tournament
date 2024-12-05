@@ -11,6 +11,7 @@ using Tournament.Core.Repositories;
 using Tournament.Data.Data.Repositories;
 using AutoMapper;
 using Tournament.Core.Dto;
+using Microsoft.AspNetCore.JsonPatch;
 
 namespace Tournament.Api.Controllers
 {
@@ -119,8 +120,31 @@ namespace Tournament.Api.Controllers
             return CreatedAtAction("GetGame", new { tournamentdetailsId =createdGame.TournamentDetailsId , gameId = createdGame.Id }, createdGame);
         }
 
-        // DELETE: api/Games/5
-        [HttpDelete("{gameId}")]
+        [HttpPatch("{gameId}")]
+        public async Task<IActionResult> PatchGame(int gameId, int tournamentdetailsId, JsonPatchDocument<GameUpdateDto> patchDocument)
+        {
+            if (patchDocument is null) return BadRequest("No patch document found");
+
+            var tournament = await _uow.tournamentRepository.AnyAsync(tournamentdetailsId);
+            if (!tournament) return NotFound("Tournament not found in database");
+
+            var gameToPatch = await _uow.gameRepository.GetAsync(gameId);
+            if (gameToPatch == null) return NotFound("Game not found");
+
+            if (gameToPatch.TournamentDetailsId != tournamentdetailsId) return BadRequest("Game is not part of selected tournament");
+
+            var gameDto = _mapper.Map<GameUpdateDto>(gameToPatch);
+
+            patchDocument.ApplyTo(gameDto);
+            _mapper.Map(gameDto, gameToPatch);
+            await _uow.CompleteAsync();
+
+            return NoContent();
+        }
+
+
+            // DELETE: api/Games/5
+            [HttpDelete("{gameId}")]
         public async Task<IActionResult> DeleteGame(int gameId, int tournamentdetailsId)
         {
             var tournament = await _uow.tournamentRepository.GetAsync(tournamentdetailsId);

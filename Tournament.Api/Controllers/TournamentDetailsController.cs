@@ -77,11 +77,28 @@ namespace Tournament.Api.Controllers
 
         }
 
-        //[HttpPatch("{id}")]
-        //public async Task<IActionResult> PatchTournamentDetails(int id, JsonPatchDocument<TournamentUpdateDto> patchDocument)
-        //{
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> PatchTournamentDetails(int id, JsonPatchDocument<TournamentUpdateDto> patchDocument)
+        {
+            if (patchDocument is null) return BadRequest("No patch document found");
 
-        //}
+            var tournamentToPatch = await _uow.tournamentRepository.GetAsync(id);
+            if (tournamentToPatch == null) return NotFound();
+
+            var tournamentDto = _mapper.Map<TournamentUpdateDto>(tournamentToPatch);
+
+            patchDocument.ApplyTo(tournamentDto);
+
+            _mapper.Map(tournamentDto, tournamentToPatch);
+            await _uow.CompleteAsync();
+
+            return NoContent();
+
+
+
+            
+
+        }
         //if (tournamentDetails.Title != null)
         //            tournament.Title = tournamentDetails.Title;
         //if (tournamentDetails.StartDate != null)
