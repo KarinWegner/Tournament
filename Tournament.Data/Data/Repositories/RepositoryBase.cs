@@ -1,0 +1,38 @@
+﻿using Domain.Contracts.Repositories;
+using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Net;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Tournament.Data.Data.Repositories
+{
+    public class RepositoryBase<T> : IRepositoryBase<T> where T : class
+    {
+
+        protected TournamentApiContext Context { get; } = default!;
+        protected DbSet<T> DbSet { get; } = default!;
+        public RepositoryBase(TournamentApiContext context)
+        {
+            Context = context;
+            DbSet = context.Set<T>();
+        }
+
+
+        public void CreateAsync(T entity) => DbSet.Add(entity);
+        public void Update(T entity) => DbSet.Update(entity);       
+        public void Delete(T entity) => DbSet.Remove(entity);
+
+
+        public IQueryable<T> FindAll(bool trackChanges = false) =>
+            !trackChanges ? DbSet.AsNoTracking() : DbSet;
+
+        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false) =>
+            !trackChanges ? DbSet.Where(expression).AsNoTracking() : DbSet.Where(expression);
+       //If tracking = false, use AsNoTracking()
+
+    }
+}
