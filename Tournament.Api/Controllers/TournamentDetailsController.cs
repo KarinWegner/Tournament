@@ -41,7 +41,7 @@ namespace Tournament.Api.Controllers
 
         // GET: api/TournamentDetails/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TournamentDetails>> GetTournamentDetails(int id)
+        public async Task<ActionResult<TournamentDetails>> GetTournamentDetails(int id, bool includeGames)
         {
             var tournament = await _uow.tournamentRepository.GetAsync(id);
 
