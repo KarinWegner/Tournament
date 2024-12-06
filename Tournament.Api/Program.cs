@@ -1,7 +1,7 @@
+using Domain.Contracts.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Tournament.Api.Extensions;
-using Tournament.Core.Repositories;
 using Tournament.Data.Data;
 using Tournament.Data.Data.Repositories;
 

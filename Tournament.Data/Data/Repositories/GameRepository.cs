@@ -9,50 +9,26 @@ using Tournament.Core.Entities;
 
 namespace Tournament.Data.Data.Repositories
 {
-    internal class GameRepository : IGameRepository
+    internal class GameRepository : RepositoryBase<Game>, IGameRepository
     {
-        private readonly TournamentApiContext _context;
+        public GameRepository(TournamentApiContext context) :base(context) { }
+       
+        public async Task<bool> AnyAsync(int id, bool trackChanges = false)
+        {
+            return await FindByCondition((t => t.Id == id), trackChanges).AnyAsync();
+        }
+       
 
-        public GameRepository(TournamentApiContext context) 
+        public async Task<IEnumerable<Game>> GetAllAsync(int tournamentdetailsId, bool trackChanges = false)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
-        }
-        public void Add(Game game)
-        {
-            _context.Game.Add(game);
-        }
-        public Task<bool> AnyAsync(int id)
-        {
-            return _context.Game.AnyAsync(g => g.Id == id);
-        }
-        public Task<bool> AnyAsync(int id, int tournamentdetailsId)
-        {
-            var result=  _context.Game.AnyAsync(g => g.Id == id && g.TournamentDetailsId == tournamentdetailsId);
-            return result;
-
+            return await FindByCondition(g => g.TournamentDetailsId == tournamentdetailsId, trackChanges).ToListAsync();
         }
 
-        public async Task<IEnumerable<Game>> GetAllAsync(int tournamentdetailsId)
+        public async Task<Game> GetAsync(int id, bool trackChanges)
         {
-           
-            var games = _context.Game.Where(g=>g.TournamentDetailsId ==tournamentdetailsId);
-
-            return await games.ToListAsync();
+            return await FindByCondition(t => t.Id == id, trackChanges).FirstOrDefaultAsync();
         }
 
-        public async Task<Game> GetAsync(int id)
-        {
-            return await _context.Game.FirstOrDefaultAsync(g => g.Id == id);
-        }
-
-        public void Remove(Game game)
-        {
-            _context.Game.Remove(game);
-        }
-
-        public void Update(Game Game)
-        {
-            throw new NotImplementedException();
-        }
+      
     }
 }

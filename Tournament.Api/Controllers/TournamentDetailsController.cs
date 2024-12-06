@@ -6,12 +6,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tournament.Data.Data;
-using Tournament.Core.Repositories;
 using AutoMapper;
 using Tournament.Core.Dto;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Entities;
+using Domain.Contracts.Repositories;
 
 namespace Tournament.Api.Controllers
 {
