@@ -5,17 +5,19 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tournament.Core.Entities
+namespace Domain.Models.Entities
 {
-    public class Game
+    public class TournamentDetails
     {
         public int Id { get; set; }
-        [Required(ErrorMessage = "Game title is a required field")]
+
+        [Required(ErrorMessage = "Tournament title is a required field")]
         [MaxLength(40, ErrorMessage = "Maximum title length is 40 characters")]
         public string Title { get; set; }
 
-        [Required(ErrorMessage = "Game time is a required field")]
-        public DateTime Time { get; set; }
-        public int TournamentDetailsId { get; set; }
+        [Required(ErrorMessage = "Tournament requires a start date")]
+        public DateTime StartDate { get; set; }
+
+        public ICollection<Game> Games { get; set; }
     }
 }

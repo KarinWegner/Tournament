@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tournament.Data.Data;
-using Tournament.Core.Entities;
 using Tournament.Core.Repositories;
 using AutoMapper;
 using Tournament.Core.Dto;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.JsonPatch;
+using Tournament.Core.Entities;
 
-namespace Tournament.Api.Controllers
+namespace Tournament.Presentation.Controllers
 {
     [Route("api/tournaments")]
     [ApiController]
@@ -46,7 +46,7 @@ namespace Tournament.Api.Controllers
             var tournament = await _uow.tournamentRepository.GetAsync(id);
 
             if (tournament == null) return NotFound();
-            
+
             return tournament;
         }
 
@@ -57,18 +57,18 @@ namespace Tournament.Api.Controllers
         {
             var tournament = await _uow.tournamentRepository.GetAsync(id);
 
-            
-            
+
+
             if (tournament == null) return NotFound("Tournament was not found");
             if (id != tournament.Id) return BadRequest("Tournament Id does not match input tournamnet");
             _mapper.Map(tournamentDetails, tournament);
 
-           
+
 
             await _uow.CompleteAsync();
-          return Ok(_mapper.Map<TournamentDto>(tournament));
+            return Ok(_mapper.Map<TournamentDto>(tournament));
 
-           // return NoContent();
+            // return NoContent();
 
         }
 
@@ -91,10 +91,10 @@ namespace Tournament.Api.Controllers
 
 
 
-            
+
 
         }
-        
+
 
 
         // POST: api/TournamentDetails
@@ -117,12 +117,12 @@ namespace Tournament.Api.Controllers
         {
             var tournamentDetails = await _context.TournamentDetails.FindAsync(id);
 
-            if (tournamentDetails == null)  return NotFound("Tournament was not found");
-            
+            if (tournamentDetails == null) return NotFound("Tournament was not found");
+
             var games = await _uow.gameRepository.GetAllAsync(id);
 
             if (games.Count() != 0) return BadRequest("Can not delete tournament with existing games");
-           
+
             _uow.tournamentRepository.Remove(tournamentDetails);
 
             await _uow.CompleteAsync();

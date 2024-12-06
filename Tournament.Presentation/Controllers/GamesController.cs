@@ -6,14 +6,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Tournament.Data.Data;
-using Tournament.Core.Entities;
-using Tournament.Core.Repositories;
 using Tournament.Data.Data.Repositories;
 using AutoMapper;
 using Tournament.Core.Dto;
 using Microsoft.AspNetCore.JsonPatch;
+using Tournament.Core.Entities;
+using Domain.Contracts.Repositories;
 
-namespace Tournament.Api.Controllers
+namespace Tournament.Presentation.Controllers
 {
     [Route("api/tournaments/{tournamentdetailsId}/games")]
     [ApiController]
@@ -63,7 +63,7 @@ namespace Tournament.Api.Controllers
 
             //if (!await _uow.gameRepository.AnyAsync(gameId, tournamentdetailsId))
             //    return NotFound("Game was not found in tournament database");
-            
+
             var gameDto = _mapper.Map<Game>(game);
 
             return gameDto;
@@ -92,7 +92,7 @@ namespace Tournament.Api.Controllers
 
             return Ok(updatedGame);
 
-           
+
         }
 
         // POST: api/Games
@@ -105,12 +105,12 @@ namespace Tournament.Api.Controllers
                 return BadRequest("Game is not part of selected Tournament");
             }
 
-            var game = _mapper.Map<Game>(gameDto);          
+            var game = _mapper.Map<Game>(gameDto);
             _uow.gameRepository.Add(game);
 
             await _uow.CompleteAsync();
             var createdGame = _mapper.Map<GameDto>(game);
-            return CreatedAtAction("GetGame", new { tournamentdetailsId =createdGame.TournamentDetailsId , gameId = createdGame.Id }, createdGame);
+            return CreatedAtAction("GetGame", new { tournamentdetailsId = createdGame.TournamentDetailsId, gameId = createdGame.Id }, createdGame);
         }
 
         // PATCH: api/tournaments/1/games/5
@@ -137,8 +137,8 @@ namespace Tournament.Api.Controllers
         }
 
 
-            // DELETE: api/Games/5
-            [HttpDelete("{gameId}")]
+        // DELETE: api/Games/5
+        [HttpDelete("{gameId}")]
         public async Task<IActionResult> DeleteGame(int gameId, int tournamentdetailsId)
         {
             var tournament = await _uow.tournamentRepository.AnyAsync(tournamentdetailsId);

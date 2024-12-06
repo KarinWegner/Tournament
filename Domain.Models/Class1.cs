@@ -1,4 +1,4 @@
-﻿namespace Tournament.Data
+﻿namespace Domain.Models
 {
     public class Class1
     {
