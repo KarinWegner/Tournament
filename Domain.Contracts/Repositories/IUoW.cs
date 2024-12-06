@@ -4,11 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Tournament.Core.Repositories
+namespace Domain.Contracts.Repositories
 {
     public interface IUoW
     {
-         ITournamentRepository tournamentRepository { get; }
+        ITournamentRepository tournamentRepository { get; }
         IGameRepository gameRepository { get; }
 
         Task CompleteAsync();

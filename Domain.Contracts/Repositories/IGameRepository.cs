@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Tournament.Core.Entities;
 
-namespace Tournament.Core.Repositories
+namespace Domain.Contracts.Repositories
 {
-    public interface IGameRepository 
+    public interface IGameRepository
     {
         public Task<IEnumerable<Game>> GetAllAsync(int tournamentdetailsId);
         public Task<Game> GetAsync(int id);
@@ -17,6 +17,6 @@ namespace Tournament.Core.Repositories
 
         public void Add(Game game);
         public void Update(Game Game);
-         public void Remove(Game game);
+        public void Remove(Game game);
     }
 }
