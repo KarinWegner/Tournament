@@ -10,9 +10,9 @@ namespace Domain.Contracts.Repositories
 {
     public interface ITournamentRepository
     {
-        Task<IEnumerable<TournamentDetails>> GetAllAsync();
-        Task<TournamentDetails> GetAsync(int id);
-        Task<bool> AnyAsync(int id);
+        Task<IEnumerable<TournamentDetails>> GetAllAsync(bool includeMatches = false, bool trackChanges = false);
+        Task<TournamentDetails> GetAsync(int id, bool trackChanges = false);
+        Task<bool> AnyAsync(int id, bool trackChanges=false);
         void Add(TournamentDetails tournament);
         void Update(TournamentDetails tournament);
         void Remove(TournamentDetails tournament);

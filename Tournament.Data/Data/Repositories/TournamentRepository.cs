@@ -9,42 +9,30 @@ using Tournament.Core.Entities;
 
 namespace Tournament.Data.Data.Repositories
 {
-    internal class TournamentRepository : ITournamentRepository
-    {
-        private readonly TournamentApiContext _context;
+    internal class TournamentRepository : RepositoryBase<TournamentDetails>, ITournamentRepository
+    {       
+        public TournamentRepository(TournamentApiContext context) : base(context) { }
+        
 
-            public TournamentRepository(TournamentApiContext context) {
-                 _context = context ?? throw new ArgumentNullException(nameof(context));
-            }
-        public void Add(TournamentDetails tournament)
+        public async Task<bool> AnyAsync(int id, bool trackChanges = false)
         {
-            _context.TournamentDetails.Add(tournament);
+            return await FindByCondition((t => t.Id == id), trackChanges).AnyAsync();
+        }        
+
+        public async Task<TournamentDetails> GetAsync(int id, bool trackChanges = false)
+        {            
+            return await FindByCondition(t => t.Id == id, trackChanges).FirstOrDefaultAsync();            
         }
 
-        public Task<bool> AnyAsync(int id)
+        public async Task<IEnumerable<TournamentDetails>> GetAllAsync(bool includeMatches = false, bool trackChanges = false)
         {
-            return _context.TournamentDetails.AnyAsync(t => t.Id == id);
+            //Använder FindAll funktionen i RepositoryBase
+            return includeMatches ? await FindAll(trackChanges).Include(t => t.Games).ToListAsync() :
+                                    await FindAll(trackChanges).ToListAsync();            
         }
 
-        public async Task<IEnumerable<TournamentDetails>> GetAllAsync()
-        {
-            return await _context.TournamentDetails.ToListAsync();
-        }
 
-        public async Task<TournamentDetails> GetAsync(int id)
-        {
 
-            return await _context.TournamentDetails.FindAsync(id);
-        }
 
-        public void Remove(TournamentDetails tournament)
-        {
-            _context.Remove(tournament);
-        }
-
-        public void Update(TournamentDetails tournament)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

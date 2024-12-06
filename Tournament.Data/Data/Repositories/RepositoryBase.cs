@@ -22,9 +22,9 @@ namespace Tournament.Data.Data.Repositories
         }
 
 
-        public void CreateAsync(T entity) => DbSet.Add(entity);
+        public void Add(T entity) => DbSet.Add(entity);
         public void Update(T entity) => DbSet.Update(entity);       
-        public void Delete(T entity) => DbSet.Remove(entity);
+        public void Remove(T entity) => DbSet.Remove(entity);
 
 
         public IQueryable<T> FindAll(bool trackChanges = false) =>
