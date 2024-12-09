@@ -13,19 +13,17 @@ using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Entities;
 using Domain.Contracts.Repositories;
 
-namespace Tournament.Presentation.Controllers
+namespace Tournament.Api.Controllers
 {
     [Route("api/tournaments/{tournamentdetailsId}/games")]
     [ApiController]
     public class GamesController : ControllerBase
     {
-        private readonly TournamentApiContext _context;
         private readonly IUoW _uow;
         private readonly IMapper _mapper;
 
-        public GamesController(TournamentApiContext context, IUoW uow, IMapper mapper)
+        public GamesController(IUoW uow, IMapper mapper)
         {
-            _context = context;
             _uow = uow;
             _mapper = mapper;
         }
