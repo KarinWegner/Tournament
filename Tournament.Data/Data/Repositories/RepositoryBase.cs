@@ -28,10 +28,11 @@ namespace Tournament.Data.Data.Repositories
 
 
         public IQueryable<T> FindAll(bool trackChanges = false) =>
-            !trackChanges ? DbSet.AsNoTracking() : DbSet;
+            trackChanges ? DbSet : DbSet.AsNoTracking();
 
         public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool trackChanges = false) =>
-            !trackChanges ? DbSet.Where(expression).AsNoTracking() : DbSet.Where(expression);
+            trackChanges ? DbSet.Where(expression) :
+            DbSet.Where(expression).AsNoTracking();
        //If tracking = false, use AsNoTracking()
 
     }
