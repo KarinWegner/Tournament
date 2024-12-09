@@ -34,9 +34,10 @@ namespace Tournament.Api.Controllers
         {
             var tournaments = includeGames ? _mapper.Map<IEnumerable<TournamentDto>>(await _uow.tournamentRepository.GetAllAsync(true)) :
                                              _mapper.Map<IEnumerable<TournamentDto>>(await _uow.tournamentRepository.GetAllAsync());
-            //    await _uow.tournamentRepository.GetAllAsync();
-            //var dto = _mapper.Map<IEnumerable<TournamentDto>>(tournaments);
-            return Ok(tournaments);
+            
+            var tournamentDto = _mapper.Map<IEnumerable<TournamentDto>>(tournaments);
+           
+            return Ok(tournamentDto);
         }
 
         // GET: api/TournamentDetails/5
