@@ -116,7 +116,7 @@ namespace Tournament.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTournamentDetails(int id)
         {
-            var tournamentDetails = await _context.TournamentDetails.FindAsync(id);
+            var tournamentDetails = await _uow.tournamentRepository.GetAsync(id);
 
             if (tournamentDetails == null) return NotFound("Tournament was not found");
 
