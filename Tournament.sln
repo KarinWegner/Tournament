@@ -9,9 +9,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tournament.Core", "Tourname
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tournament.Data", "Tournament.Data\Tournament.Data.csproj", "{980DA890-FD97-4B19-9CE4-CA9757E37A02}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Contracts", "Domain.Contracts\Domain.Contracts.csproj", "{C28B02B1-3A8B-42DD-89E2-13440608B5D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain.Contracts", "Domain.Contracts\Domain.Contracts.csproj", "{C28B02B1-3A8B-42DD-89E2-13440608B5D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tournament.Presentation", "Tournament.Presentation\Tournament.Presentation.csproj", "{A8D42DA5-D6B0-428A-A75F-A5E170B91148}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tournament.Presentation", "Tournament.Presentation\Tournament.Presentation.csproj", "{A8D42DA5-D6B0-428A-A75F-A5E170B91148}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tournament.Services", "Tournament.Services\Tournament.Services.csproj", "{5C49F82A-40C5-497A-82AE-85C1374C0822}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{A8D42DA5-D6B0-428A-A75F-A5E170B91148}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A8D42DA5-D6B0-428A-A75F-A5E170B91148}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A8D42DA5-D6B0-428A-A75F-A5E170B91148}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C49F82A-40C5-497A-82AE-85C1374C0822}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C49F82A-40C5-497A-82AE-85C1374C0822}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C49F82A-40C5-497A-82AE-85C1374C0822}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C49F82A-40C5-497A-82AE-85C1374C0822}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
