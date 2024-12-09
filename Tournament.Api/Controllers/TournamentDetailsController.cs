@@ -30,22 +30,25 @@ namespace Tournament.Api.Controllers
 
         // GET: api/TournamentDetails
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TournamentDetails>>> GetTournamentDetails()
+        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails(bool includeGames)
         {
-            var tournaments = await _uow.tournamentRepository.GetAllAsync();
-            var dto = _mapper.Map<IEnumerable<TournamentDto>>(tournaments);
-            return Ok(dto);
+            var tournaments = includeGames ? _mapper.Map<IEnumerable<TournamentDto>>(await _uow.tournamentRepository.GetAllAsync(true)) :
+                                             _mapper.Map<IEnumerable<TournamentDto>>(await _uow.tournamentRepository.GetAllAsync());
+            //    await _uow.tournamentRepository.GetAllAsync();
+            //var dto = _mapper.Map<IEnumerable<TournamentDto>>(tournaments);
+            return Ok(tournaments);
         }
 
         // GET: api/TournamentDetails/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<TournamentDetails>> GetTournamentDetails(int id, bool includeGames)
+        public async Task<ActionResult<TournamentDto>> GetTournamentDetails(int id)
         {
             var tournament = await _uow.tournamentRepository.GetAsync(id);
-
             if (tournament == null) return NotFound();
+            var tournamentDto = _mapper.Map<TournamentDto>(tournament);
 
-            return tournament;
+
+            return tournamentDto;
         }
 
         // PUT: api/TournamentDetails/5
