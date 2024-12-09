@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
 using Domain.Contracts.Repositories;
 using Domain.Contracts.Services;
+using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Dto;
+using Tournament.Core.Entities;
 
 namespace Tournament.Services
 {
@@ -44,6 +46,48 @@ namespace Tournament.Services
 
             await uow.CompleteAsync();
             return mapper.Map<TournamentDto>(tournament);
+        }
+
+        public async Task<TournamentDto> PostTournament(TournamentCreateDto dto)
+        {
+            var tournamentDetails = mapper.Map<TournamentDetails>(dto);
+
+            uow.tournamentRepository.Add(tournamentDetails);
+            await uow.CompleteAsync();
+
+            return mapper.Map<TournamentDto>(tournamentDetails);
+        }
+
+        public async Task DeleteTournament(int id)
+        {
+            var tournamentDetails = await uow.tournamentRepository.GetAsync(id);
+
+            //ToDo: Add exceptions
+            //if (tournamentDetails == null) return NotFound("Tournament was not found");
+
+            var games = await uow.gameRepository.GetAllAsync(id);
+
+           // if (games.Count() != 0) return BadRequest("Can not delete tournament with existing games");
+
+            uow.tournamentRepository.Remove(tournamentDetails);
+
+            await uow.CompleteAsync();
+        }
+
+        public async Task PatchTournament(int id, JsonPatchDocument<TournamentUpdateDto> patchDocument)
+        {
+            //ToDo Add exceptions
+            //if (patchDocument is null) return BadRequest("No patch document found");
+
+            var tournamentToPatch = await uow.tournamentRepository.GetAsync(id);
+           // if (tournamentToPatch == null) return NotFound("Tournament was not found");
+
+            var tournamentDto = mapper.Map<TournamentUpdateDto>(tournamentToPatch);
+
+            patchDocument.ApplyTo(tournamentDto);
+
+            mapper.Map(tournamentDto, tournamentToPatch);
+            await uow.CompleteAsync();
         }
     }
     
