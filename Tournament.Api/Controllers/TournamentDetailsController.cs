@@ -19,13 +19,11 @@ namespace Tournament.Api.Controllers
     [ApiController]
     public class TournamentDetailsController : ControllerBase
     {
-        private readonly TournamentApiContext _context;
         private readonly IUoW _uow;
         private readonly IMapper _mapper;
 
-        public TournamentDetailsController(TournamentApiContext context, IUoW uow, IMapper mapper)
+        public TournamentDetailsController(IUoW uow, IMapper mapper)
         {
-            _context = context ?? throw new ArgumentNullException(nameof(context));
             _uow = uow ?? throw new ArgumentNullException(nameof(uow));
             _mapper = mapper;
         }
