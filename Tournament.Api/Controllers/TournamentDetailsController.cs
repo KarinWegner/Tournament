@@ -56,15 +56,15 @@ namespace Tournament.Api.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTournamentDetails(int id, TournamentUpdateDto tournamentDetails)
         {
-            var tournament = await _uow.tournamentRepository.GetAsync(id);
 
+            if (id != tournamentDetails.Id) return BadRequest();
 
+            var tournament = await _uow.tournamentRepository.GetAsync(id, trackChanges: true);
 
             if (tournament == null) return NotFound("Tournament was not found");
             if (id != tournament.Id) return BadRequest("Tournament Id does not match input tournamnet");
+
             _mapper.Map(tournamentDetails, tournament);
-
-
 
             await _uow.CompleteAsync();
             return Ok(_mapper.Map<TournamentDto>(tournament));
