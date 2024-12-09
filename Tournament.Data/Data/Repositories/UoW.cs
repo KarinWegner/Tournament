@@ -9,17 +9,19 @@ namespace Tournament.Data.Data.Repositories
 {
     public class UoW : IUoW
     {
-        public ITournamentRepository tournamentRepository { get;  }
 
-        public IGameRepository gameRepository { get; }
-
+        private readonly Lazy<ITournamentRepository> _tournamentRepository;
+        private readonly Lazy<IGameRepository> _gameRepository;
         private readonly TournamentApiContext _context;
+        public ITournamentRepository tournamentRepository => _tournamentRepository.Value;
+        public IGameRepository gameRepository => _gameRepository.Value;
+
 
         public UoW (TournamentApiContext context)
         {
             _context = context;
-            tournamentRepository = new TournamentRepository(_context);
-            gameRepository = new GameRepository(_context);
+           _tournamentRepository = new Lazy<ITournamentRepository>(() => new TournamentRepository(context));
+            _gameRepository = new Lazy<IGameRepository>(()=> new  GameRepository(context));
         }
 
         public async Task CompleteAsync()
