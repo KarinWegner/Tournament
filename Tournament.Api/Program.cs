@@ -1,9 +1,11 @@
 using Domain.Contracts.Repositories;
+using Domain.Contracts.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Tournament.Api.Extensions;
 using Tournament.Data.Data;
 using Tournament.Data.Data.Repositories;
+using Tournament.Services;
 
 namespace Tournament.Api
 {
@@ -27,6 +29,7 @@ namespace Tournament.Api
             builder.Services.AddAutoMapper(typeof(TournamentMappings));
 
             builder.Services.AddScoped<IUoW, UoW>();
+            builder.Services.AddScoped<IServiceManager, ServiceManager>();
 
             var app = builder.Build();
             await app.SeedDataAsync();
