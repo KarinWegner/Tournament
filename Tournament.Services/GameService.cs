@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts.Repositories;
-using Domain.Contracts.Services;
+using Services.Contracts.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Dto;
 using Tournament.Core.Entities;
@@ -115,7 +115,7 @@ namespace Tournament.Services
             //    return BadRequest("Game is not part of selected Tournament");
 
             uow.gameRepository.Remove(game);
-            await uow.CompleteAsync();
+            await  uow.CompleteAsync();
         }
     }
 }

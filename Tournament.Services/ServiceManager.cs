@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Contracts.Repositories;
-using Domain.Contracts.Services;
+using Services.Contracts.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;

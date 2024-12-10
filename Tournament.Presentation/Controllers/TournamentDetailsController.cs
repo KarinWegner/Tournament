@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Tournament.Core.Dto;
-using Domain.Contracts.Services;
+using Services.Contracts.Services;
 using Microsoft.AspNetCore.JsonPatch;
 
-namespace Tournament.Api.Controllers
+namespace Tournament.Presentation.Controllers
 {
     [Route("api/tournaments")]
     [ApiController]
@@ -20,7 +20,7 @@ namespace Tournament.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails(bool includeGames)
         {
-            var tournamentsDto = await serviceManager.TournamentService.GetTournamentsAsync(includeGames);           
+            var tournamentsDto = await serviceManager.TournamentService.GetTournamentsAsync(includeGames);
             return Ok(tournamentsDto);
         }
 
@@ -35,7 +35,7 @@ namespace Tournament.Api.Controllers
         // PUT: api/TournamentDetails/5    
         [HttpPut("{id}")]
         public async Task<IActionResult> PutTournamentDetails(int id, TournamentUpdateDto tournamentDetails)
-        {          
+        {
             var tournamentDto = await serviceManager.TournamentService.PutTournamentAsync(id, tournamentDetails);
             return Ok(tournamentDto);
         }
@@ -43,7 +43,7 @@ namespace Tournament.Api.Controllers
         [HttpPatch("{id}")]
         public async Task<IActionResult> PatchTournamentDetails(int id, JsonPatchDocument<TournamentUpdateDto> patchDocument)
         {
-            await serviceManager.TournamentService.PatchTournament(id, patchDocument);          
+            await serviceManager.TournamentService.PatchTournament(id, patchDocument);
             return NoContent();
         }
 
@@ -52,7 +52,7 @@ namespace Tournament.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<TournamentDto>> PostTournamentDetails(TournamentCreateDto dto)
         {
-            TournamentDto createdTournament = await serviceManager.TournamentService.PostTournament(dto);           
+            TournamentDto createdTournament = await serviceManager.TournamentService.PostTournament(dto);
             return CreatedAtAction("GetTournamentDetails", new { id = createdTournament.Id }, createdTournament);
         }
 
@@ -60,7 +60,7 @@ namespace Tournament.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteTournamentDetails(int id)
         {
-            await serviceManager.TournamentService.DeleteTournament(id);            
+            await serviceManager.TournamentService.DeleteTournament(id);
             return NoContent();
         }
 

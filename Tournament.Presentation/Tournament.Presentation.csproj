@@ -7,23 +7,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Controllers\**" />
-    <EmbeddedResource Remove="Controllers\**" />
-    <None Remove="Controllers\**" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="Controllers\GamesController.cs" />
-    <Compile Include="Controllers\TournamentDetailsController.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="8.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Core" Version="2.2.5" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Domain.Contracts\Domain.Contracts.csproj" />
+    <ProjectReference Include="..\Services.Contracts\Services.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

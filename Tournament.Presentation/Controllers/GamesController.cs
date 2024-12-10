@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Tournament.Data.Data;
-using Tournament.Data.Data.Repositories;
-using AutoMapper;
+﻿using Microsoft.AspNetCore.Mvc;
 using Tournament.Core.Dto;
 using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Entities;
-using Domain.Contracts.Repositories;
-using Domain.Contracts.Services;
+using Services.Contracts.Services;
 
-namespace Tournament.Api.Controllers
+namespace Tournament.Presentation.Controllers
 {
     [Route("api/tournaments/{tournamentdetailsId}/games")]
     [ApiController]
@@ -31,14 +21,14 @@ namespace Tournament.Api.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GameDto>>> GetGames(int tournamentdetailsId)
         {
-            IEnumerable<GameDto> gamesDto = await serviceManager.GameService.GetGames(tournamentdetailsId);          
+            IEnumerable<GameDto> gamesDto = await serviceManager.GameService.GetGames(tournamentdetailsId);
             return Ok(gamesDto);
         }
 
         [HttpGet("{gameId}")]
         public async Task<ActionResult<GameDto>> GetGame(int tournamentdetailsId, int gameId)
         {
-            GameDto gameDto = await serviceManager.GameService.GetGame(tournamentdetailsId, gameId);      
+            GameDto gameDto = await serviceManager.GameService.GetGame(tournamentdetailsId, gameId);
             return gameDto;
         }
 
@@ -47,7 +37,7 @@ namespace Tournament.Api.Controllers
         [HttpPut("{gameId}")]
         public async Task<IActionResult> PutGame(int tournamentdetailsId, int gameId, GameUpdateDto gameDto)
         {
-            GameDto updatedGame = await serviceManager.GameService.PutGame(tournamentdetailsId, gameId, gameDto);            
+            GameDto updatedGame = await serviceManager.GameService.PutGame(tournamentdetailsId, gameId, gameDto);
             return Ok(updatedGame);
         }
 
@@ -56,7 +46,7 @@ namespace Tournament.Api.Controllers
         [HttpPost]
         public async Task<ActionResult<Game>> PostGame(GameCreateDto gameDto, int tournamentdetailsId)
         {
-            GameDto createdGame = await serviceManager.GameService.PostGame(gameDto, tournamentdetailsId);           
+            GameDto createdGame = await serviceManager.GameService.PostGame(gameDto, tournamentdetailsId);
             return CreatedAtAction("GetGame", new { tournamentdetailsId = createdGame.TournamentDetailsId, gameId = createdGame.Id }, createdGame);
         }
 
@@ -64,7 +54,7 @@ namespace Tournament.Api.Controllers
         [HttpPatch("{gameId}")]
         public async Task<IActionResult> PatchGame(int tournamentdetailsId, int gameId, JsonPatchDocument<GameUpdateDto> patchDocument)
         {
-            await serviceManager.GameService.PatchGame(tournamentdetailsId,gameId,patchDocument);
+            await serviceManager.GameService.PatchGame(tournamentdetailsId, gameId, patchDocument);
             return NoContent();
         }
 
@@ -73,7 +63,7 @@ namespace Tournament.Api.Controllers
         [HttpDelete("{gameId}")]
         public async Task<IActionResult> DeleteGame(int gameId, int tournamentdetailsId)
         {
-            await serviceManager.GameService.DeleteGame(gameId,tournamentdetailsId);         
+            await serviceManager.GameService.DeleteGame(gameId, tournamentdetailsId);
             return NoContent();
         }
 

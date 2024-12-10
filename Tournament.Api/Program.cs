@@ -1,12 +1,13 @@
 using Domain.Contracts.Repositories;
-using Domain.Contracts.Services;
+
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+
 using Tournament.Api.Extensions;
 using Tournament.Data.Data;
 using Tournament.Data.Data.Repositories;
 using Tournament.Services;
-
+using Services.Contracts.Services;
 namespace Tournament.Api
 {
     public class Program
