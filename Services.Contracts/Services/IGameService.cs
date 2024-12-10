@@ -1,13 +1,7 @@
-﻿using Domain.Contracts.Repositories;
-using Microsoft.AspNetCore.JsonPatch;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Dto;
 
-namespace Domain.Contracts.Services
+namespace Services.Contracts.Services
 {
     public interface IGameService
     {
