@@ -8,6 +8,7 @@ using Tournament.Data.Data;
 using Tournament.Data.Data.Repositories;
 using Tournament.Services;
 using Services.Contracts.Services;
+using Tournament.Presentation;
 namespace Tournament.Api
 {
     public class Program
@@ -22,7 +23,8 @@ namespace Tournament.Api
 
             builder.Services.AddControllers(opt => opt.ReturnHttpNotAcceptable = true)
                 .AddNewtonsoftJson()
-                .AddXmlDataContractSerializerFormatters();
+                .AddXmlDataContractSerializerFormatters()
+                .AddApplicationPart(typeof(AssemblyReference).Assembly);
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
