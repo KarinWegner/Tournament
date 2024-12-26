@@ -20,7 +20,7 @@ namespace Tournament.Services
 
         public async Task<IEnumerable<GameDto>> GetGames(int tournamentdetailsId)
         {
-            var tournament = await uow.tournamentRepository.GetAsync(tournamentdetailsId);
+            var tournament = await uow.TournamentRepository.GetAsync(tournamentdetailsId);
             if (tournament == null)
             {
                 //Todo add exception
@@ -28,17 +28,17 @@ namespace Tournament.Services
             }
             var tournamentDto = mapper.Map<TournamentDetails>(tournament);
 
-            var games = await uow.gameRepository.GetAllAsync(tournamentdetailsId);
+            var games = await uow.GameRepository.GetAllAsync(tournamentdetailsId);
             return  mapper.Map<IEnumerable<GameDto>>(games);
         }
 
         public async Task<GameDto> GetGame(int tournamentdetailsId, int gameId)
         {
-            var tournament = await uow.tournamentRepository.AnyAsync(tournamentdetailsId);
+            var tournament = await uow.TournamentRepository.AnyAsync(tournamentdetailsId);
             //Todo: add exceptions
             //if (!tournament) return NotFound("Tournament was not found");
 
-            var game = await uow.gameRepository.GetAsync(gameId);
+            var game = await uow.GameRepository.GetAsync(gameId);
             //if (game == null) return NotFound("Game was not found");
 
             //if (game.TournamentDetailsId != tournamentdetailsId)
@@ -53,10 +53,10 @@ namespace Tournament.Services
 
         public async Task<GameDto> PutGame(int tournamentdetailsId, int gameId, GameUpdateDto gameDto)
         {
-            var tournament = await uow.tournamentRepository.AnyAsync(tournamentdetailsId);
+            var tournament = await uow.TournamentRepository.AnyAsync(tournamentdetailsId);
            // if (!tournament) return NotFound("Tournament was not found");
 
-            var game = await uow.gameRepository.GetAsync(gameId);
+            var game = await uow.GameRepository.GetAsync(gameId);
            // if (game == null) return NotFound("Game was not found");
 
             //if (game.TournamentDetailsId != tournamentdetailsId)
@@ -78,7 +78,7 @@ namespace Tournament.Services
             }
 
             var game = mapper.Map<Game>(gameDto);
-            uow.gameRepository.Add(game);
+            uow.GameRepository.Add(game);
 
             await uow.CompleteAsync();
             return mapper.Map<GameDto>(game);
@@ -88,10 +88,10 @@ namespace Tournament.Services
         {
             //if (patchDocument is null) return BadRequest("No patch document found");
 
-            var tournament = await uow.tournamentRepository.AnyAsync(tournamentdetailsId);
+            var tournament = await uow.TournamentRepository.AnyAsync(tournamentdetailsId);
            // if (!tournament) return NotFound("Tournament not found in database");
 
-            var gameToPatch = await uow.gameRepository.GetAsync(gameId);
+            var gameToPatch = await uow.GameRepository.GetAsync(gameId);
             //if (gameToPatch == null) return NotFound("Game not found");
 
             //if (gameToPatch.TournamentDetailsId != tournamentdetailsId) return BadRequest("Game is not part of selected tournament");
@@ -105,16 +105,16 @@ namespace Tournament.Services
 
         public async Task DeleteGame(int gameId, int tournamentdetailsId)
         {
-            var tournament = await uow.tournamentRepository.AnyAsync(tournamentdetailsId);
+            var tournament = await uow.TournamentRepository.AnyAsync(tournamentdetailsId);
             //if (!tournament) return NotFound("Tournament was not found");
 
-            var game = await uow.gameRepository.GetAsync(gameId);
+            var game = await uow.GameRepository.GetAsync(gameId);
            // if (game == null) return NotFound("Game was not found");
 
             //if (game.TournamentDetailsId != tournamentdetailsId)
             //    return BadRequest("Game is not part of selected Tournament");
 
-            uow.gameRepository.Remove(game);
+            uow.GameRepository.Remove(game);
             await  uow.CompleteAsync();
         }
     }

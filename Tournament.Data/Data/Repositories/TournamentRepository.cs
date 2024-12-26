@@ -9,7 +9,7 @@ using Tournament.Core.Entities;
 
 namespace Tournament.Data.Data.Repositories
 {
-    internal class TournamentRepository : RepositoryBase<TournamentDetails>, ITournamentRepository
+    public class TournamentRepository : RepositoryBase<TournamentDetails>, ITournamentRepository
     {       
         public TournamentRepository(TournamentApiContext context) : base(context) { }
         

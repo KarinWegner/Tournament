@@ -20,12 +20,12 @@ namespace Tournament.Services
         public async Task<IEnumerable<TournamentDto>> GetTournamentsAsync(bool includeGames, bool trackChanges = false) 
         {
 
-            return mapper.Map<IEnumerable<TournamentDto>>(await uow.tournamentRepository.GetAllAsync(includeGames, trackChanges));
+            return mapper.Map<IEnumerable<TournamentDto>>(await uow.TournamentRepository.GetAllAsync(includeGames, trackChanges));
 
         }
         public async Task<TournamentDto> GetTournamentsAsync(int id, bool trackChanges = false)
         {
-            var tournament = await uow.tournamentRepository.GetAsync(id);
+            var tournament = await uow.TournamentRepository.GetAsync(id);
             //ToDo add exception
            // if (tournament == null) return NotFound();
             var tournamentDto = mapper.Map<TournamentDto>(tournament);
@@ -37,7 +37,7 @@ namespace Tournament.Services
         {
             //ToDo: add exceptions
             //if (id != tournamentDetails.Id)  return BadRequest();
-            var tournament = await uow.tournamentRepository.GetAsync(id, trackChanges: true);
+            var tournament = await uow.TournamentRepository.GetAsync(id, trackChanges: true);
 
             //if (tournament == null) return NotFound("Tournament was not found");
             //if (id != tournament.Id) return BadRequest("Tournament Id does not match input tournamnet");
@@ -52,7 +52,7 @@ namespace Tournament.Services
         {
             var tournamentDetails = mapper.Map<TournamentDetails>(dto);
 
-            uow.tournamentRepository.Add(tournamentDetails);
+            uow.TournamentRepository.Add(tournamentDetails);
             await uow.CompleteAsync();
 
             return mapper.Map<TournamentDto>(tournamentDetails);
@@ -60,16 +60,16 @@ namespace Tournament.Services
 
         public async Task DeleteTournament(int id)
         {
-            var tournamentDetails = await uow.tournamentRepository.GetAsync(id);
+            var tournamentDetails = await uow.TournamentRepository.GetAsync(id);
 
             //ToDo: Add exceptions
             //if (tournamentDetails == null) return NotFound("Tournament was not found");
 
-            var games = await uow.gameRepository.GetAllAsync(id);
+            var games = await uow.GameRepository.GetAllAsync(id);
 
            // if (games.Count() != 0) return BadRequest("Can not delete tournament with existing games");
 
-            uow.tournamentRepository.Remove(tournamentDetails);
+            uow.TournamentRepository.Remove(tournamentDetails);
 
             await uow.CompleteAsync();
         }
@@ -79,7 +79,7 @@ namespace Tournament.Services
             //ToDo Add exceptions
             //if (patchDocument is null) return BadRequest("No patch document found");
 
-            var tournamentToPatch = await uow.tournamentRepository.GetAsync(id);
+            var tournamentToPatch = await uow.TournamentRepository.GetAsync(id);
            // if (tournamentToPatch == null) return NotFound("Tournament was not found");
 
             var tournamentDto = mapper.Map<TournamentUpdateDto>(tournamentToPatch);
