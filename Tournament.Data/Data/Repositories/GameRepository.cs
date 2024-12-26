@@ -9,7 +9,7 @@ using Tournament.Core.Entities;
 
 namespace Tournament.Data.Data.Repositories
 {
-    internal class GameRepository : RepositoryBase<Game>, IGameRepository
+    public class GameRepository : RepositoryBase<Game>, IGameRepository
     {
         public GameRepository(TournamentApiContext context) :base(context) { }
        

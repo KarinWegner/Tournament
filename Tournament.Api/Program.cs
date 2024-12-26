@@ -31,8 +31,8 @@ namespace Tournament.Api
             builder.Services.AddSwaggerGen();
             builder.Services.AddAutoMapper(typeof(TournamentMappings));
 
-            builder.Services.AddScoped<IUoW, UoW>();
-            builder.Services.AddScoped<IServiceManager, ServiceManager>();
+            builder.Services.ConfigureServiceLayerServices();
+            builder.Services.ConfigureRepositories();
 
             var app = builder.Build();
             await app.SeedDataAsync();

@@ -8,8 +8,8 @@ namespace Domain.Contracts.Repositories
 {
     public interface IUoW
     {
-        ITournamentRepository tournamentRepository { get; }
-        IGameRepository gameRepository { get; }
+        ITournamentRepository TournamentRepository { get; }
+        IGameRepository GameRepository { get; }
 
         Task CompleteAsync();
     }

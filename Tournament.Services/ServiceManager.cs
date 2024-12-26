@@ -16,13 +16,11 @@ namespace Tournament.Services
 
         public ITournamentService TournamentService => tournamentService.Value;
         public IGameService GameService => gameService.Value;
-        public ServiceManager(IUoW uow, IMapper mapper)
+        public ServiceManager(Lazy<ITournamentService> tournamentservice, Lazy<IGameService> gameservice)
         {
-            ArgumentNullException.ThrowIfNull(nameof(uow));
+            tournamentService = tournamentservice;
+            gameService = gameservice;
 
-
-             tournamentService = new Lazy<ITournamentService>(() => new TournamentService(uow, mapper));
-             gameService = new Lazy<IGameService>(() => new GameService(uow, mapper));
         }
     }
 }
