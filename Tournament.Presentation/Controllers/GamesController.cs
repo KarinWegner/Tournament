@@ -3,12 +3,13 @@ using Tournament.Core.Dto;
 using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Entities;
 using Services.Contracts.Services;
+using Tournament.Core.Response;
 
 namespace Tournament.Presentation.Controllers
 {
     [Route("api/tournaments/{tournamentdetailsId}/games")]
     [ApiController]
-    public class GamesController : ControllerBase
+    public class GamesController : ApiControllerBase
     {
         private readonly IServiceManager serviceManager;
 
@@ -21,15 +22,22 @@ namespace Tournament.Presentation.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<GameDto>>> GetGames(int tournamentdetailsId)
         {
-            IEnumerable<GameDto> gamesDto = await serviceManager.GameService.GetGames(tournamentdetailsId);
-            return Ok(gamesDto);
+               ApiBaseResponse response = await serviceManager.GameService.GetGames(tournamentdetailsId);
+           
+            return response.Success ?
+                Ok(response.GetOkResult<IEnumerable<GameDto>>()) :
+                ProcessError(response);
+                
         }
 
         [HttpGet("{gameId}")]
         public async Task<ActionResult<GameDto>> GetGame(int tournamentdetailsId, int gameId)
         {
-            GameDto gameDto = await serviceManager.GameService.GetGame(tournamentdetailsId, gameId);
-            return gameDto;
+               ApiBaseResponse response = await serviceManager.GameService.GetGame(tournamentdetailsId, gameId);
+            
+            return response.Success ?
+                Ok(response.GetOkResult<GameDto>()) :
+                ProcessError(response);
         }
 
         // PUT: api/Games/5

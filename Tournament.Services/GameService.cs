@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Dto;
 using Tournament.Core.Entities;
 using Tournament.Core.Exceptions;
+using Tournament.Core.Response;
 
 namespace Tournament.Services
 {
@@ -19,37 +20,37 @@ namespace Tournament.Services
             this.mapper = mapper;
         }
 
-        public async Task<IEnumerable<GameDto>> GetGames(int tournamentdetailsId)
+        public async Task<ApiBaseResponse> GetGames(int tournamentdetailsId)
         {
             var tournament = await uow.TournamentRepository.GetAsync(tournamentdetailsId);
             if (tournament == null)
             {
-                
-                throw new TournamentNotFoundException(tournamentdetailsId);
+                return new TournamentNotFoundResponse(tournamentdetailsId);
             }
             var tournamentDto = mapper.Map<TournamentDetails>(tournament);
 
             var games = await uow.GameRepository.GetAllAsync(tournamentdetailsId);
-            return  mapper.Map<IEnumerable<GameDto>>(games);
+            var gamesDto = mapper.Map<IEnumerable<GameDto>>(games);
+
+            return new ApiOkResponse<IEnumerable<GameDto>>(gamesDto);
         }
 
-        public async Task<GameDto> GetGame(int tournamentdetailsId, int gameId)
+        public async Task<ApiBaseResponse> GetGame(int tournamentdetailsId, int gameId)
         {
             var tournament = await uow.TournamentRepository.AnyAsync(tournamentdetailsId);
-            //Todo: add exceptions
-            //if (!tournament) return NotFound("Tournament was not found");
+
+            if (!tournament) return new TournamentNotFoundResponse(tournamentdetailsId);
 
             var game = await uow.GameRepository.GetAsync(gameId);
-            //if (game == null) return NotFound("Game was not found");
+            if (game == null) return new GameNotFoundResponse(gameId);
 
-            //if (game.TournamentDetailsId != tournamentdetailsId)
-            //    return BadRequest("Game is not part of selected Tournament");
+            if (game.TournamentDetailsId != tournamentdetailsId)
+                return new BadRequestResponse("Game is not part of selected Tournament");
 
 
-            //if (!await _uow.gameRepository.AnyAsync(gameId, tournamentdetailsId))
-            //    return NotFound("Game was not found in tournament database");
 
-            return mapper.Map<GameDto>(game);
+            var gameDto = mapper.Map<GameDto>(game);
+            return new ApiOkResponse<GameDto>(gameDto);
         }
 
         public async Task<GameDto> PutGame(int tournamentdetailsId, int gameId, GameUpdateDto gameDto)

@@ -21,6 +21,9 @@ namespace Tournament.Api.Extensions
                         var problemDetails = CreateProblemDetails(context, contextFeatures.Error, problemDetailsFactory, app);
 
                         context.Response.StatusCode = problemDetails.Status ?? StatusCodes.Status500InternalServerError;
+
+
+                        await context.Response.WriteAsJsonAsync(problemDetails);
                     }
                 });
             });
