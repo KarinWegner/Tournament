@@ -4,6 +4,7 @@ using Services.Contracts.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Dto;
 using Tournament.Core.Entities;
+using Tournament.Core.Exceptions;
 
 namespace Tournament.Services
 {
@@ -26,8 +27,10 @@ namespace Tournament.Services
         public async Task<TournamentDto> GetTournamentsAsync(int id, bool trackChanges = false)
         {
             var tournament = await uow.TournamentRepository.GetAsync(id);
-            //ToDo add exception
-           // if (tournament == null) return NotFound();
+          
+            if (tournament == null)
+                throw new TournamentNotFoundException(id);
+
             var tournamentDto = mapper.Map<TournamentDto>(tournament);
 
             return tournamentDto;

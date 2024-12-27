@@ -4,6 +4,7 @@ using Services.Contracts.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Dto;
 using Tournament.Core.Entities;
+using Tournament.Core.Exceptions;
 
 namespace Tournament.Services
 {
@@ -23,8 +24,8 @@ namespace Tournament.Services
             var tournament = await uow.TournamentRepository.GetAsync(tournamentdetailsId);
             if (tournament == null)
             {
-                //Todo add exception
-                //return NotFound(tournament);
+                
+                throw new TournamentNotFoundException(tournamentdetailsId);
             }
             var tournamentDto = mapper.Map<TournamentDetails>(tournament);
 
@@ -109,7 +110,7 @@ namespace Tournament.Services
             //if (!tournament) return NotFound("Tournament was not found");
 
             var game = await uow.GameRepository.GetAsync(gameId);
-           // if (game == null) return NotFound("Game was not found");
+            if (game == null) throw new GameNotFoundException(gameId);
 
             //if (game.TournamentDetailsId != tournamentdetailsId)
             //    return BadRequest("Game is not part of selected Tournament");

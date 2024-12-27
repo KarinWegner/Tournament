@@ -35,6 +35,9 @@ namespace Tournament.Api
             builder.Services.ConfigureRepositories();
 
             var app = builder.Build();
+
+            app.ConfigureExceptionHandler();
+
             await app.SeedDataAsync();
 
             // Configure the HTTP request pipeline.
