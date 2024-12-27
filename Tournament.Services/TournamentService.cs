@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Tournament.Core.Dto;
 using Tournament.Core.Entities;
 using Tournament.Core.Exceptions;
+using Tournament.Core.Request;
 
 namespace Tournament.Services
 {
@@ -18,10 +19,12 @@ namespace Tournament.Services
             this.uow = uow;
             this.mapper = mapper;
         }
-        public async Task<IEnumerable<TournamentDto>> GetTournamentsAsync(bool includeGames, bool trackChanges = false) 
+        public async Task<(IEnumerable<TournamentDto>, MetaData metaData)> GetTournamentsAsync(TournamentRequestParams requestParams, bool trackChanges = false) 
         {
 
-            return mapper.Map<IEnumerable<TournamentDto>>(await uow.TournamentRepository.GetAllAsync(includeGames, trackChanges));
+                var pagedList = await uow.TournamentRepository.GetAllAsync(requestParams, trackChanges);
+            var TournamentsDto = mapper.Map<IEnumerable<TournamentDto>>(pagedList.Items);
+            return (TournamentsDto, pagedList.MetaData);
 
         }
         public async Task<TournamentDto> GetTournamentsAsync(int id, bool trackChanges = false)

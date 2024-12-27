@@ -5,12 +5,13 @@ using System.Reflection.Metadata;
 using System.Text;
 using System.Threading.Tasks;
 using Tournament.Core.Entities;
+using Tournament.Core.Request;
 
 namespace Domain.Contracts.Repositories
 {
     public interface ITournamentRepository
     {
-        Task<IEnumerable<TournamentDetails>> GetAllAsync(bool includeMatches = false, bool trackChanges = false);
+        Task<PagedList<TournamentDetails>> GetAllAsync(TournamentRequestParams requestParams, bool trackChanges = false);
         Task<TournamentDetails> GetAsync(int id, bool trackChanges = false);
         Task<bool> AnyAsync(int id, bool trackChanges=false);
         void Add(TournamentDetails tournament);

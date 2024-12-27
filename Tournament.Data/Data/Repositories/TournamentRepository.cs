@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Tournament.Core.Entities;
+using Tournament.Core.Request;
 
 namespace Tournament.Data.Data.Repositories
 {
@@ -24,11 +25,15 @@ namespace Tournament.Data.Data.Repositories
             return await FindByCondition(t => t.Id == id, trackChanges).FirstOrDefaultAsync();            
         }
 
-        public async Task<IEnumerable<TournamentDetails>> GetAllAsync(bool includeMatches = false, bool trackChanges = false)
+        public async Task<PagedList<TournamentDetails>> GetAllAsync(TournamentRequestParams requestParams, bool trackChanges = false)
         {
             //Använder FindAll funktionen i RepositoryBase
-            return includeMatches ? await FindAll(trackChanges).Include(t => t.Games).ToListAsync() :
-                                    await FindAll(trackChanges).ToListAsync();            
+            var tournaments = requestParams.IncludeGames ?  FindAll(trackChanges).Include(t => t.Games) :
+                                                              FindAll(trackChanges);        
+            
+            return await PagedList<TournamentDetails>.CreateAsync(tournaments, requestParams.PageNumber, requestParams.PageSize);
+
+
         }
 
 

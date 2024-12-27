@@ -2,6 +2,7 @@
 using Tournament.Core.Dto;
 using Services.Contracts.Services;
 using Microsoft.AspNetCore.JsonPatch;
+using Tournament.Core.Request;
 
 namespace Tournament.Presentation.Controllers
 {
@@ -18,9 +19,9 @@ namespace Tournament.Presentation.Controllers
 
         // GET: api/TournamentDetails
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails(bool includeGames)
+        public async Task<ActionResult<IEnumerable<TournamentDto>>> GetTournamentDetails([FromQuery]TournamentRequestParams requestParams)
         {
-            var tournamentsDto = await serviceManager.TournamentService.GetTournamentsAsync(includeGames);
+            var tournamentsDto = await serviceManager.TournamentService.GetTournamentsAsync(requestParams);
             return Ok(tournamentsDto);
         }
 
