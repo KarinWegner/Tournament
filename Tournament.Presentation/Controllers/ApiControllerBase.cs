@@ -16,11 +16,11 @@ namespace Tournament.Presentation.Controllers
         {
             return baseResponse switch
             {
-                ApiNotFoundResponse => NotFound(Results.Problem
+                ApiNotFoundResponse => NotFound( 
                 (
-                    detail: ((ApiNotFoundResponse)baseResponse).Message,
-                     statusCode: StatusCodes.Status404NotFound,
-                    title: "Not Found",
+                    Detail: ((ApiNotFoundResponse)baseResponse).Message,
+                     Status: StatusCodes.Status404NotFound,
+                    Title: "Not Found",
                     instance: HttpContext.Request.Path
                 )),
                 _ => throw new NotImplementedException()
