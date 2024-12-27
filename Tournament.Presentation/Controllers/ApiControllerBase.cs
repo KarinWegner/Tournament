@@ -23,6 +23,14 @@ namespace Tournament.Presentation.Controllers
                     Title: "Not Found",
                     instance: HttpContext.Request.Path
                 )),
+                BadRequestResponse => BadRequest(
+                    (
+                    Detail: ((BadRequestResponse)baseResponse).Message,
+                     Status: StatusCodes.Status404NotFound,
+                    Title: "Bad Request",
+                    instance: HttpContext.Request.Path
+
+                )),
                 _ => throw new NotImplementedException()
             };
 

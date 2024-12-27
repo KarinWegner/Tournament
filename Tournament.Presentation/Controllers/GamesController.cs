@@ -54,8 +54,19 @@ namespace Tournament.Presentation.Controllers
         [HttpPost]
         public async Task<ActionResult<Game>> PostGame(GameCreateDto gameDto, int tournamentdetailsId)
         {
-            GameDto createdGame = await serviceManager.GameService.PostGame(gameDto, tournamentdetailsId);
+            
+            ApiBaseResponse response =  await serviceManager.GameService.PostGame(gameDto, tournamentdetailsId);
+            
+
+            if (response.Success)
+            {
+                GameDto createdGame = response.GetCreatedAtResult<GameDto>();
+
             return CreatedAtAction("GetGame", new { tournamentdetailsId = createdGame.TournamentDetailsId, gameId = createdGame.Id }, createdGame);
+            }
+
+            return ProcessError(response);
+                       
         }
 
         // PATCH: api/tournaments/1/games/5

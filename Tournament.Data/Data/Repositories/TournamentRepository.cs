@@ -24,6 +24,10 @@ namespace Tournament.Data.Data.Repositories
         {            
             return await FindByCondition(t => t.Id == id, trackChanges).FirstOrDefaultAsync();            
         }
+        public async Task<int> CountAsync(int id)
+        {
+            return await FindByCondition(t => t.Id == id).CountAsync();
+        }
 
         public async Task<PagedList<TournamentDetails>> GetAllAsync(TournamentRequestParams requestParams, bool trackChanges = false)
         {

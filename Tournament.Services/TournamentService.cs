@@ -6,6 +6,7 @@ using Tournament.Core.Dto;
 using Tournament.Core.Entities;
 using Tournament.Core.Exceptions;
 using Tournament.Core.Request;
+using Tournament.Core.Response;
 
 namespace Tournament.Services
 {
@@ -95,6 +96,18 @@ namespace Tournament.Services
             mapper.Map(tournamentDto, tournamentToPatch);
             await uow.CompleteAsync();
         }
+        public async Task<int> GetGameCount(int id)
+        {
+            var tournamentToCount = await uow.TournamentRepository.GetAsync(id);
+            if (tournamentToCount == null)
+            {
+                //  return TournamentNotFoundResponse(id);
+                throw new TournamentNotFoundException(id);
+            }
+            return await uow.TournamentRepository.CountAsync(id);
+
+        }
+        
     }
     
 

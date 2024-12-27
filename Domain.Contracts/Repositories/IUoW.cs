@@ -10,6 +10,7 @@ namespace Domain.Contracts.Repositories
     {
         ITournamentRepository TournamentRepository { get; }
         IGameRepository GameRepository { get; }
+        ITournamentConstraints TournamentConstraints { get; }
 
         Task CompleteAsync();
     }

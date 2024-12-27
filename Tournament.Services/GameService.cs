@@ -72,18 +72,28 @@ namespace Tournament.Services
             return updatedGame;
         }
 
-        public async Task<GameDto> PostGame(GameCreateDto gameDto, int tournamentdetailsId)
+        public async Task<ApiBaseResponse> PostGame(GameCreateDto gameDto, int tournamentdetailsId)
         {
             if (gameDto.TournamentDetailsId != tournamentdetailsId)
             {
-              //  return BadRequest("Game is not part of selected Tournament");
+                return new BadRequestResponse("Game is not part of selected Tournament");
+            }
+            var gameList = await uow.GameRepository.GetAllAsync(tournamentdetailsId);
+
+
+            bool maxGameCountReached = uow.TournamentConstraints.ExceedsAllowedGameCount(gameList.Count());
+            if (maxGameCountReached)
+            {
+                return new BadRequestResponse("A tournament can not contain more than 10 games.");
             }
 
             var game = mapper.Map<Game>(gameDto);
             uow.GameRepository.Add(game);
 
             await uow.CompleteAsync();
-            return mapper.Map<GameDto>(game);
+               var addedGame = mapper.Map<GameDto>(game);
+
+            return new ApiCreatedAtResponse<GameDto>(addedGame);
         }
 
         public async Task PatchGame(int tournamentdetailsId, int gameId, JsonPatchDocument<GameUpdateDto> patchDocument)
@@ -118,6 +128,17 @@ namespace Tournament.Services
 
             uow.GameRepository.Remove(game);
             await  uow.CompleteAsync();
+        }
+        public async Task<bool> GameCreationAllowed(int tournamentdetailsId)
+        {
+            var tournamentToCount = await uow.TournamentRepository.GetAsync(tournamentdetailsId);
+            if (tournamentToCount == null)
+            {
+                throw new TournamentNotFoundException(tournamentdetailsId);
+            }
+            var gameCount = await uow.TournamentRepository.CountAsync(tournamentdetailsId);
+
+            return !uow.TournamentConstraints.ExceedsAllowedGameCount(gameCount);
         }
     }
 }

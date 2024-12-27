@@ -46,6 +46,8 @@ namespace Tournament.Api.Extensions
 
             services.AddScoped<ITournamentRepository, TournamentRepository>();
             services.AddScoped<IGameRepository, GameRepository>();
+            services.AddScoped<ITournamentConstraints,  TournamentConstraints>();
+            services.AddLazy<ITournamentConstraints>();
             services.AddScoped<IUoW, UoW>();
             services.AddLazy<ITournamentRepository>();
             services.AddLazy<IGameRepository>();

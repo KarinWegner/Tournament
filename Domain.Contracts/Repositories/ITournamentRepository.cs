@@ -14,6 +14,7 @@ namespace Domain.Contracts.Repositories
         Task<PagedList<TournamentDetails>> GetAllAsync(TournamentRequestParams requestParams, bool trackChanges = false);
         Task<TournamentDetails> GetAsync(int id, bool trackChanges = false);
         Task<bool> AnyAsync(int id, bool trackChanges=false);
+        Task<int> CountAsync(int id);
         void Add(TournamentDetails tournament);
         void Update(TournamentDetails tournament);
         void Remove(TournamentDetails tournament);

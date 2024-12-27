@@ -19,6 +19,15 @@ namespace Tournament.Core.Response
             throw new InvalidOperationException($"Response type {this.GetType().Name} is not ApiOkResponse");
         }
 
+        public TResultType GetCreatedAtResult<TResultType>()
+        {
+            if (this is ApiCreatedAtResponse<TResultType> apiCreateResponse)
+            {
+                return apiCreateResponse.Result;
+            }
+            throw new InvalidOperationException($"Response type {this.GetType().Name} is not ApiCreatedAtResponse");
+        }
+
     }
     public sealed class ApiOkResponse<TResult> : ApiBaseResponse
     {
@@ -28,7 +37,16 @@ namespace Tournament.Core.Response
             Result= result;
         }
     }
-    public abstract class ApiNotFoundResponse : ApiBaseResponse
+
+    public sealed class ApiCreatedAtResponse<TResult> : ApiBaseResponse
+    {
+        public TResult Result { get; set; }
+        public ApiCreatedAtResponse(TResult result) : base(true)
+        {
+            Result = result;
+        }
+    }
+        public abstract class ApiNotFoundResponse : ApiBaseResponse
     {
         public string Message { get; set; }
         public ApiNotFoundResponse(string message) : base(false)
